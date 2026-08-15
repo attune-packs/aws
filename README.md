@@ -169,7 +169,11 @@ The attributed upstream release is exactly `v2.0.2` at `cc8ff4fa335229178ec24586
 
 ## Testing
 
-Tests are deterministic, use fake clients and local botocore models, make no AWS calls, require no account or credentials, and add no undeclared test dependencies.
+Tests are deterministic, use fake clients, make no AWS calls, require no account
+or credentials, and add no undeclared test dependencies. Checks against local
+botocore service models run when the pack's declared runtime dependencies are
+installed; they are skipped in a bare test environment while all other tests
+continue to run.
 
 ```shell
 python -m unittest discover -s tests -v

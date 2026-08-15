@@ -12,9 +12,53 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
-from botocore.exceptions import ClientError
-from botocore.session import get_session
-from botocore.validate import validate_parameters
+try:
+    import boto3  # noqa: F401
+    from botocore.exceptions import BotoCoreError, ClientError, WaiterError
+    from botocore.session import get_session
+    from botocore.validate import validate_parameters
+
+    SDK_AVAILABLE = True
+except ImportError:
+    SDK_AVAILABLE = False
+
+    class BotoCoreError(Exception):
+        pass
+
+    class ClientError(Exception):
+        def __init__(self, response, operation_name):
+            super().__init__(operation_name)
+            self.response = response
+            self.operation_name = operation_name
+
+    class WaiterError(Exception):
+        pass
+
+    class Config:
+        def __init__(self, **kwargs):
+            self.__dict__.update(kwargs)
+
+    boto3_stub = types.ModuleType("boto3")
+    boto3_stub.Session = mock.Mock(side_effect=RuntimeError("boto3 is unavailable"))
+    config_stub = types.ModuleType("botocore.config")
+    config_stub.Config = Config
+    exceptions_stub = types.ModuleType("botocore.exceptions")
+    exceptions_stub.BotoCoreError = BotoCoreError
+    exceptions_stub.ClientError = ClientError
+    exceptions_stub.WaiterError = WaiterError
+    botocore_stub = types.ModuleType("botocore")
+    botocore_stub.config = config_stub
+    botocore_stub.exceptions = exceptions_stub
+    sys.modules.update(
+        {
+            "boto3": boto3_stub,
+            "botocore": botocore_stub,
+            "botocore.config": config_stub,
+            "botocore.exceptions": exceptions_stub,
+        }
+    )
+    get_session = None
+    validate_parameters = None
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -226,6 +270,9 @@ class MetadataTests(unittest.TestCase):
 
 
 class ServiceModelTests(unittest.TestCase):
+    @unittest.skipUnless(
+        SDK_AVAILABLE, "boto3/botocore runtime dependencies unavailable"
+    )
     def test_curated_methods_exist_in_pinned_botocore_models(self):
         session = get_session()
         expected = {
@@ -501,6 +548,9 @@ class PaginationAndActionTests(unittest.TestCase):
         )
         self.assertEqual(("ec2", False, True), context.client_calls[-1])
 
+    @unittest.skipUnless(
+        SDK_AVAILABLE, "boto3/botocore runtime dependencies unavailable"
+    )
     def test_change_set_uses_native_client_token_name(self):
         service = RecordingClient([{"Id": "change-id"}])
         context = FakeContext(service)
@@ -531,6 +581,9 @@ class PaginationAndActionTests(unittest.TestCase):
         )
         self.assertEqual(("get_change", {"Id": "/change/C1"}), service.calls[0])
 
+    @unittest.skipUnless(
+        SDK_AVAILABLE, "boto3/botocore runtime dependencies unavailable"
+    )
     def test_route53_change_request_matches_current_service_model(self):
         service = RecordingClient([{"ChangeInfo": {"Id": "/change/C1"}}])
         params = {
@@ -559,6 +612,9 @@ class PaginationAndActionTests(unittest.TestCase):
         )
         validate_parameters(request, model.input_shape)
 
+    @unittest.skipUnless(
+        SDK_AVAILABLE, "boto3/botocore runtime dependencies unavailable"
+    )
     def test_rds_method_names_match_current_clients(self):
         service = RecordingClient()
         client.execute_with_context(
