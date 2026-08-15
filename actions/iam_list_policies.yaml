@@ -1,0 +1,22 @@
+ref: aws.iam_list_policies
+label: "List IAM Policies"
+description: "List bounded local or AWS-managed policy inventory"
+enabled: true
+runner_type: python
+runtime_version: ">=3.10"
+entry_point: aws_action.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+default_execution_permission_set_refs: [standard]
+parameters:
+  credential_key: {type: string, default: "aws.credentials", required: true}
+  region: {type: string}
+  scope: {type: string, enum: [All, AWS, Local], default: Local}
+  max_results: {type: integer, default: 100, minimum: 1, maximum: 1000}
+  page_size: {type: integer, default: 100, minimum: 1, maximum: 1000}
+  starting_token: {type: string}
+output:
+  operation: {type: string, required: true}
+  result: {type: object, required: true}
+tags: [aws, iam, policy, inventory]

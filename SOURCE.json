@@ -1,0 +1,27 @@
+{
+  "upstream": {
+    "repository": "https://github.com/StackStorm-Exchange/stackstorm-aws",
+    "version": "2.0.2",
+    "tag": "v2.0.2",
+    "revision": "cc8ff4fa335229178ec24586aff4a69f9a270ecb",
+    "revision_date": "2022-06-21T10:11:00+01:00",
+    "license": "Apache-2.0",
+    "license_blob": "8dada3edaf50dbc082c9a125058f25def75e625a",
+    "license_sha256": "b40930bbcf80744c86c46a12bc9da056641d722716c378f5659b9e555ef833e1",
+    "generated_action_metadata_files": 3583
+  },
+  "api_reference": {
+    "boto3_version": "1.43.72",
+    "boto3_tag_object": "f08dc6071430e542f2e4b26ed5b81b8133366536",
+    "boto3_revision": "a3fc41f4709808012ad6053980a7a9422ed4d1a4",
+    "botocore_version": "1.43.72",
+    "botocore_tag_object": "0eeef7a2a279ac00f559903ee30d5ca246315dde",
+    "botocore_revision": "6e07fe03fd69cf36c930f8c9f7cad7f7f4fd4892",
+    "documentation": "https://boto3.amazonaws.com/v1/documentation/api/1.43.72/reference/services/index.html",
+    "reviewed_at": "2026-08-14"
+  },
+  "translation": {
+    "strategy": "curated rewrite using current boto3 clients and botocore service models",
+    "generated_actions_ported": 0
+  }
+}

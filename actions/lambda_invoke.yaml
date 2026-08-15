@@ -1,0 +1,22 @@
+ref: aws.lambda_invoke
+label: "Invoke Lambda Function"
+description: "Invoke one Lambda with bounded request/response payloads and no mutation retry"
+enabled: true
+runner_type: python
+runtime_version: ">=3.10"
+entry_point: aws_action.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+default_execution_permission_set_refs: [standard]
+parameters:
+  credential_key: {type: string, default: "aws.credentials", required: true}
+  region: {type: string}
+  function_name: {type: string, required: true}
+  invocation_type: {type: string, enum: [Event, RequestResponse, DryRun], default: RequestResponse}
+  payload: {type: object, description: "JSON object payload; maximum encoded size 1 MiB"}
+  confirm: {type: string, description: "INVOKE:<function_name>", required: true}
+output:
+  operation: {type: string, required: true}
+  result: {type: object, required: true}
+tags: [aws, lambda, serverless, mutation]

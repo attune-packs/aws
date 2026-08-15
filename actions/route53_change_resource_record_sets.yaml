@@ -1,0 +1,22 @@
+ref: aws.route53_change_resource_record_sets
+label: "Change Route 53 Record Sets"
+description: "Apply up to 1,000 explicit DNS changes after hosted-zone confirmation"
+enabled: true
+runner_type: python
+runtime_version: ">=3.10"
+entry_point: aws_action.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+default_execution_permission_set_refs: [standard]
+parameters:
+  credential_key: {type: string, default: "aws.credentials", required: true}
+  region: {type: string}
+  hosted_zone_id: {type: string, required: true}
+  changes: {type: array, items: {type: object}, minItems: 1, maxItems: 1000, required: true}
+  comment: {type: string}
+  confirm: {type: string, description: "CHANGE:<hosted_zone_id>", required: true}
+output:
+  operation: {type: string, required: true}
+  result: {type: object, required: true}
+tags: [aws, route53, dns, destructive]

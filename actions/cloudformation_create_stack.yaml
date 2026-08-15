@@ -1,0 +1,25 @@
+ref: aws.cloudformation_create_stack
+label: "Create CloudFormation Stack"
+description: "Create a stack from an inline template with optional native idempotency token"
+enabled: true
+runner_type: python
+runtime_version: ">=3.10"
+entry_point: aws_action.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+default_execution_permission_set_refs: [standard]
+parameters:
+  credential_key: {type: string, default: "aws.credentials", required: true}
+  region: {type: string}
+  stack_name: {type: string, required: true}
+  template_body: {type: string, required: true}
+  parameters: {type: object}
+  capabilities: {type: array, items: {type: string}}
+  on_failure: {type: string, enum: [DO_NOTHING, ROLLBACK, DELETE], default: ROLLBACK}
+  client_request_token: {type: string}
+  confirm: {type: string, description: "CREATE:<stack_name>", required: true}
+output:
+  operation: {type: string, required: true}
+  result: {type: object, required: true}
+tags: [aws, cloudformation, stacks, mutation]

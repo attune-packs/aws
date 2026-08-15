@@ -1,0 +1,19 @@
+ref: aws.route53_get_change
+label: "Get Route 53 Change Status"
+description: "Read the status of one Route 53 change"
+enabled: true
+runner_type: python
+runtime_version: ">=3.10"
+entry_point: aws_action.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+default_execution_permission_set_refs: [standard]
+parameters:
+  credential_key: {type: string, default: "aws.credentials", required: true}
+  region: {type: string}
+  change_id: {type: string, required: true}
+output:
+  operation: {type: string, required: true}
+  result: {type: object, required: true}
+tags: [aws, route53, dns, polling]

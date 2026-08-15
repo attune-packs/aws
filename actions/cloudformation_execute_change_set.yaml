@@ -1,0 +1,22 @@
+ref: aws.cloudformation_execute_change_set
+label: "Execute CloudFormation Change Set"
+description: "Execute a named change set after exact stack/change-set confirmation"
+enabled: true
+runner_type: python
+runtime_version: ">=3.10"
+entry_point: aws_action.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+default_execution_permission_set_refs: [standard]
+parameters:
+  credential_key: {type: string, default: "aws.credentials", required: true}
+  region: {type: string}
+  stack_name: {type: string, required: true}
+  change_set_name: {type: string, required: true}
+  client_request_token: {type: string, description: "Native CloudFormation idempotency token"}
+  confirm: {type: string, description: "EXECUTE_CHANGE_SET:<stack_name>/<change_set_name>", required: true}
+output:
+  operation: {type: string, required: true}
+  result: {type: object, required: true}
+tags: [aws, cloudformation, changeset, destructive]

@@ -1,0 +1,22 @@
+ref: aws.autoscaling_describe_groups
+label: "Describe Auto Scaling Groups"
+description: "Describe named or bounded Auto Scaling groups"
+enabled: true
+runner_type: python
+runtime_version: ">=3.10"
+entry_point: aws_action.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+default_execution_permission_set_refs: [standard]
+parameters:
+  credential_key: {type: string, default: "aws.credentials", required: true}
+  region: {type: string}
+  group_names: {type: array, items: {type: string}, maxItems: 50}
+  max_results: {type: integer, default: 100, minimum: 1, maximum: 1000}
+  page_size: {type: integer, default: 100, minimum: 1, maximum: 100}
+  starting_token: {type: string}
+output:
+  operation: {type: string, required: true}
+  result: {type: object, required: true}
+tags: [aws, autoscaling, compute, discovery]

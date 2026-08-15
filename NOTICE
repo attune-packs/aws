@@ -1,0 +1,14 @@
+This product includes an adaptation of requirements and concepts from the
+StackStorm Exchange AWS pack, version 2.0.2, originally by StackStorm, Inc.
+and subsequently maintained by StackStorm Exchange contributors.
+
+Source: https://github.com/StackStorm-Exchange/stackstorm-aws
+Revision: cc8ff4fa335229178ec24586aff4a69f9a270ecb
+License: Apache License 2.0
+
+The implementation, session and credential handling, action contracts, safety
+guards, and Attune metadata have been substantially rewritten. None of the
+upstream pack's 3,583 generated boto action metadata files were ported. Current
+API behavior was reviewed against boto3 and botocore 1.43.72 service models at
+revisions a3fc41f4709808012ad6053980a7a9422ed4d1a4 and
+6e07fe03fd69cf36c930f8c9f7cad7f7f4fd4892 respectively.
